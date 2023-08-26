@@ -1,56 +1,70 @@
-document.addEventListener("DOMContentLoaded", diceRoller)
-
-function diceFaces(dice) {
-    switch (dice) {
-      case 1:
-        return 4;
-      case 2:
-        return 6;
-      case 3:
-        return 8;
-      case 4:
-        return 10;
-      case 5:
-        return 12;
-      case 6:
-        return 20;
-      default:
-        return undefined;
+document.addEventListener("DOMContentLoaded", () => {
+    const resultContainer = document.getElementById('result-container');
+  
+    function diceFaces(dice) {
+      switch (dice) {
+        case 1:
+          return 4;
+        case 2:
+          return 6;
+        case 3:
+          return 8;
+        case 4:
+          return 10;
+        case 5:
+          return 12;
+        case 6:
+          return 20;
+        default:
+          return undefined;
+      }
     }
-  }
-
-  function randomNumberGenerator(rolls) {
-    return Math.floor(Math.random() * rolls) + 1;
-  }
-
-function diceRoller(){
-    let dicePrompt = parseInt(prompt("Elija el dado que desea tirar 1-d4 | 2-d6 | 3-d8 | 4-d10 | 5-d12 | 6-d20"));
-      
-    const diceValue = diceFaces(dicePrompt)
-
+  
+    function randomNumberGenerator(dice) {
+      return Math.floor(Math.random() * dice) + 1;
+    }
+  
+    function diceRoller() {
+      const dicePrompt = parseInt(prompt("Elija el dado que desea tirar 1-d4 | 2-d6 | 3-d8 | 4-d10 | 5-d12 | 6-d20"));
+  
+      const diceValue = diceFaces(dicePrompt);
+  
       if (isNaN(dicePrompt)) {
-          return alert("El valor ingresado no es un número")
+        resultContainer.innerHTML = "<p>El valor ingresado no es un número</p>";
+        return;
       }
-      
+  
       if (!diceValue) {
-        return alert("El número ingresado es invalido")
+        resultContainer.innerHTML = "<p>El número ingresado es inválido</p>";
+        return;
       }
-      
-      let rolls = parseInt(prompt("Elija la cantidad de dados que deseas tirar"));
-      
+  
+      const rolls = parseInt(prompt("Elija la cantidad de dados que desea tirar (entre 1 y 10 dados)"));
+  
       if (isNaN(rolls)) {
-        return  alert("El valor ingresado no es un número")
+        resultContainer.innerHTML = "<p>El valor ingresado no es un número</p>";
+        return;
       }
-      
-      let rollsArray = []
-      
+  
+      if (rolls < 1 || rolls > 10) {
+        resultContainer.innerHTML = "<p>La cantidad de dados es incorrecta</p>";
+        return;
+      }
+  
+      const rollsArray = [];
       for (let i = 0; i < rolls; i++) {
-        rollsArray.push(randomNumberGenerator(rolls))
+        rollsArray.push(randomNumberGenerator(diceValue));
       }
-
-      const message = (diceValue == 1 )? `Se tiraron ${rolls} dados de ${diceValue} caras, el resultado fue: ${rollsArray}`: `Se tiraron ${rolls} dados de ${diceValue} caras, los resultados fueron: ${rollsArray}` 
-      alert(message)
-}
-
-
-
+  
+      const message = (rolls === 1) ? `Se tiró un dado de ${diceValue} caras, el resultado fue: ${rollsArray}` : `Se tiraron ${rolls} dados de ${diceValue} caras, los resultados fueron: ${rollsArray}`;
+  
+      resultContainer.innerHTML = `<p>${message}</p>`;
+  
+      localStorage.setItem('diceResults', JSON.stringify(rollsArray));
+    }
+  
+    const storedResults = JSON.parse(localStorage.getItem('diceResults'));
+    if (storedResults) {
+      resultContainer.innerHTML = `<p>Últimos resultados almacenados: ${storedResults.join(', ')}</p>`;
+    }
+  });
