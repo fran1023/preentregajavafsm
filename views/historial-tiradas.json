@@ -1,0 +1,42 @@
+[
+    {
+        "player": "Jugador 1",
+        "diceType": "d6",
+        "rolls": [3, 5, 2],
+        "date": "2023-09-19 15:30:00",
+        "location": "Sala de juegos",
+        "notes": "Partida de rol",
+        "gameName": "Aventuras en el Bosque",
+        "gameMaster": "GM123"
+    },
+    {
+        "player": "Jugador 2",
+        "diceType": "d10",
+        "rolls": [7, 10],
+        "date": "2023-09-18 19:15:30",
+        "location": "Mesa de cocina",
+        "notes": "",
+        "gameName": "Intriga en la Ciudad",
+        "gameMaster": "GM456"
+    },
+    {
+        "player": "Jugador 3",
+        "diceType": "d20",
+        "rolls": [15],
+        "date": "2023-09-17 21:45:00",
+        "location": "Salón de convenciones",
+        "notes": "Torneo de dados",
+        "gameName": "Torneo Épico",
+        "gameMaster": "GM789"
+    },
+    {
+        "player": "Jugador 4",
+        "diceType": "d12",
+        "rolls": [8, 11, 5],
+        "date": "2023-09-16 14:00:00",
+        "location": "Cafetería",
+        "notes": "Partida casual",
+        "gameName": "Aventuras en las Ruinas",
+        "gameMaster": "GM123"
+    }
+]

@@ -10,7 +10,7 @@
 <body>
     <header></header>
     <main>
-        <section id="dice-container">
+                <section id="dice-container">
             <div class="dice first-face">
                 <span class="dot">
                 </span>
@@ -370,73 +370,117 @@
               
               </div>
         </section>
-        <section id="result-container">
-            <!-- Aquí se mostrarán los resultados -->
+        <section id="message-container" style="display: none; text-align: center;">
+            <div id="message" style="background-color: #f0f0f0; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+                <!-- Mensaje de alerta o resultado de tirada aquí -->
+                <p></p>
+                <button id="close-message" style="background-color: #007BFF; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cerrar</button>
+            </div>
         </section>
     </main>
     <footer></footer>
     <script>
-        document.addEventListener("DOMContentLoaded", diceRoller);
-
-        function diceFaces(dice) {
-            switch (dice) {
-                case 1:
-                    return 4;
-                case 2:
-                    return 6;
-                case 3:
-                    return 8;
-                case 4:
-                    return 10;
-                case 5:
-                    return 12;
-                case 6:
-                    return 20;
-                default:
-                    return undefined;
-            }
-        }
-
-        function randomNumberGenerator(dice) {
-            return Math.floor(Math.random() * dice) + 1;
-        }
-
-        function diceRoller() {
-            let dicePrompt = parseInt(prompt("Elija el dado que desea tirar 1-d4 | 2-d6 | 3-d8 | 4-d10 | 5-d12 | 6-d20"));
-
-            const diceValue = diceFaces(dicePrompt);
-
-            if (isNaN(dicePrompt)) {
-                return alert("El valor ingresado no es un número");
-            }
-
-            if (!diceValue) {
-                return alert("El número ingresado es inválido");
-            }
-
-            let rolls = parseInt(prompt("Elija la cantidad de dados que deseas tirar (entre 1 y 10 dados)"));
-
-            if (isNaN(rolls)) {
-                return  alert("El valor ingresado no es un número");
-            }
-
-            if (rolls < 1 || rolls > 10) {
-                return alert("La cantidad de dados es incorrecta");
-            }
-
-            let rollsArray = [];
-
-            for (let i = 0; i < rolls; i++) {
-                rollsArray.push(randomNumberGenerator(diceValue));
-            }
-
-            const message = (rolls === 1) ?
-                `Se tiró un dado de ${diceValue} caras, el resultado fue: ${rollsArray}` :
-                `Se tiraron ${rolls} dados de ${diceValue} caras, los resultados fueron: ${rollsArray}`;
-
-            const resultContainer = document.getElementById("result-container");
-            resultContainer.textContent = message;
-        }
-    </script>
-</body>
-</html>
+      document.addEventListener("DOMContentLoaded", diceRoller);
+  
+      function diceFaces(dice) {
+          switch (dice) {
+              case 1:
+                  return 4;
+              case 2:
+                  return 6;
+              case 3:
+                  return 8;
+              case 4:
+                  return 10;
+              case 5:
+                  return 12;
+              case 6:
+                  return 20;
+              default:
+                  return undefined;
+          }
+      }
+  
+      function randomNumberGenerator(dice) {
+          return Math.floor(Math.random() * dice) + 1;
+      }
+  
+      function showMessage(message) {
+          const messageContainer = document.getElementById("message-container");
+          const messageElement = document.querySelector("#message p");
+          messageElement.textContent = message;
+          messageContainer.style.display = "block";
+      }
+  
+      async function loadDiceHistory() {
+          try {
+              const response = await fetch('C:\Users\Fran\Desktop\CODERHOUSE\JAVASCRIPT\JSON\historial-tiradas.json');
+              if (!response.ok) {
+                  throw new Error('Error al cargar los datos del historial');
+              }
+              const data = await response.json();
+  
+              // Procesa los datos y muestra el historial en el DOM
+              const historyContainer = document.getElementById("history-container");
+              data.forEach(item => {
+                  const historyItem = document.createElement("div");
+                  historyItem.className = "history-item";
+                  historyItem.innerHTML = `
+                      <p><strong>Jugador:</strong> ${item.player}</p>
+                      <p><strong>Tipo de Dado:</strong> ${item.diceType}</p>
+                      <p><strong>Tiradas:</strong> ${item.rolls.join(', ')}</p>
+                  `;
+                  historyContainer.appendChild(historyItem);
+              });
+  
+          } catch (error) {
+              console.error('Error:', error);
+          }
+      }
+  
+      function diceRoller() {
+          let dicePrompt = parseInt(prompt("Elija el dado que desea tirar 1-d4 | 2-d6 | 3-d8 | 4-d10 | 5-d12 | 6-d20"));
+  
+          const diceValue = diceFaces(dicePrompt);
+  
+          if (isNaN(dicePrompt)) {
+              showMessage("El valor ingresado no es un número");
+              return;
+          }
+  
+          if (!diceValue) {
+              showMessage("El número ingresado es inválido");
+              return;
+          }
+  
+          let rolls = parseInt(prompt("Elija la cantidad de dados que desea tirar (entre 1 y 10 dados)"));
+  
+          if (isNaN(rolls)) {
+              showMessage("El valor ingresado no es un número");
+              return;
+          }
+  
+          if (rolls < 1 || rolls > 10) {
+              showMessage("La cantidad de dados es incorrecta");
+              return;
+          }
+  
+          let rollsArray = [];
+  
+          for (let i = 0; i < rolls; i++) {
+              rollsArray.push(randomNumberGenerator(diceValue));
+          }
+  
+          const message = (rolls === 1) ?
+              `Se tiró un dado de ${diceValue} caras, el resultado fue: ${rollsArray}` :
+              `Se tiraron ${rolls} dados de ${diceValue} caras, los resultados fueron: ${rollsArray}`;
+  
+          showMessage(message);
+      }
+  
+      const closeMessageButton = document.getElementById("close-message");
+      closeMessageButton.addEventListener("click", function () {
+          const messageContainer = document.getElementById("message-container");
+          messageContainer.style.display = "none";
+      });
+  </script>
